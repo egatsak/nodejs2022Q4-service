@@ -7,6 +7,8 @@ import { Track } from 'src/tracks/entities/tracks.interface';
 import { Favorites } from 'src/favorites/entities/favorite.entity';
 import { CreateUserDto } from 'src/users/dto/create-user.dto';
 import { UpdateUserDto } from 'src/users/dto/update-user.dto';
+import { CreateArtistDto } from 'src/artists/dto/create-artist.dto';
+import { UpdateArtistDto } from 'src/artists/dto/update-artist.dto';
 
 @Injectable()
 export class Db {
@@ -19,7 +21,7 @@ export class Db {
     albums: [],
     tracks: [],
   };
-
+  /// === USERS ===
   async getAllUsers(): Promise<User[]> {
     return this.users;
   }
@@ -43,12 +45,12 @@ export class Db {
     return newUser;
   }
 
-  async updateUser(id: string, dto: UpdateUserDto): Promise<User> {
+  async updateUser(id: string, dto: UpdateUserDto): Promise<User | null> {
     /*     const index = this.users.findIndex((user) => user.id === id); */
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {
-      throw new Error('User not found!');
+      return null;
     }
 
     for (const key in dto) {
@@ -63,5 +65,38 @@ export class Db {
   async deleteUser(id): Promise<void> {
     const index = this.users.findIndex((user) => user.id === id);
     this.users.splice(index, 1);
+  }
+
+  /// === ARTISTS ===
+
+  async getAllArtists(): Promise<Artist[]> {
+    return this.artists;
+  }
+
+  async getArtistByKey({ key, equals }): Promise<Artist | null> {
+    const artist = this.artists.find((artist) => artist[key] === equals);
+    return artist;
+  }
+
+  async createArtist(dto: CreateArtistDto): Promise<Artist> {
+    const newArtist: Artist = { ...dto, id: uuid() };
+    this.artists.push(newArtist);
+    return newArtist;
+  }
+
+  async updateArtist(id: string, dto: UpdateArtistDto): Promise<Artist | null> {
+    const artist = this.artists.find((artist) => artist.id === id);
+    if (!artist) {
+      return null;
+    }
+    for (const key in dto) {
+      artist[key] = dto[key];
+    }
+    return artist;
+  }
+
+  async deleteArtist(id: string): Promise<void> {
+    const index = this.artists.findIndex((artist) => artist.id === id);
+    this.artists.splice(index, 1);
   }
 }
