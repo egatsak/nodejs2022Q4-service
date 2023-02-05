@@ -175,9 +175,11 @@ export class Db {
 
   async updateTrack(id: string, dto: UpdateTrackDto): Promise<Track | null> {
     const track = this.tracks.find((track) => track.id === id);
+
     if (!track) {
       return null;
     }
+
     for (const key in dto) {
       track[key] = dto[key];
     }

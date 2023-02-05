@@ -91,7 +91,7 @@ export class FavoritesService {
   }
 
   async removeAlbum(id: string) {
-    const album = await this.db.getArtistByKey({
+    const album = await this.db.getAlbumByKey({
       key: 'id',
       equals: id,
     });

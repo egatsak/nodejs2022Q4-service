@@ -12,11 +12,22 @@ export class TracksService {
       key: 'id',
       equals: dto.artistId,
     });
-    if (!artist) {
-      throw new NotFoundException();
+
+    if (!artist && dto.artistId !== null) {
+      throw new NotFoundException(`Artist not found`);
     }
-    const album = await this.db.createTrack(dto);
-    return album;
+
+    const album = await this.db.getAlbumByKey({
+      key: 'id',
+      equals: dto.albumId,
+    });
+
+    if (!album && dto.albumId !== null) {
+      throw new NotFoundException(`Album not found`);
+    }
+
+    const track = await this.db.createTrack(dto);
+    return track;
   }
 
   async findAll() {
@@ -32,18 +43,38 @@ export class TracksService {
   }
 
   async update(id: string, dto: UpdateTrackDto) {
-    const artist = await this.db.getArtistByKey({
+    const track = await this.db.getTrackByKey({
       key: 'id',
-      equals: dto.artistId,
+      equals: id,
     });
-    if (!artist) {
-      throw new NotFoundException();
+
+    if (!track) {
+      throw new NotFoundException(`Track not found`);
     }
-    const album = await this.db.updateTrack(id, dto);
-    if (!album) {
-      throw new NotFoundException();
+
+    if (dto.artistId !== null) {
+      const artist = await this.db.getArtistByKey({
+        key: 'id',
+        equals: dto.artistId,
+      });
+      if (!artist) {
+        throw new NotFoundException();
+      }
     }
-    return album;
+
+    if (dto.albumId !== null) {
+      const album = await this.db.getAlbumByKey({
+        key: 'id',
+        equals: dto.albumId,
+      });
+
+      if (!album) {
+        throw new NotFoundException();
+      }
+    }
+
+    const updatedTrack = await this.db.updateTrack(id, dto);
+    return updatedTrack;
   }
 
   async remove(id: string) {
