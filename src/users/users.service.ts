@@ -26,8 +26,8 @@ export class UsersService {
   }
 
   async createUser(dto: CreateUserDto): Promise<User> {
-    const user = this.db.createUser(dto);
-    return user;
+    const user = await this.db.createUser(dto);
+    return new User(user);
   }
 
   async updateUserPassword(id: string, dto: UpdatePasswordDto): Promise<User> {
@@ -43,6 +43,9 @@ export class UsersService {
 
   async deleteUser(id: string) {
     const user = await this.getById(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
     await this.db.deleteUser(id);
     return new User(user);
   }

@@ -1,5 +1,4 @@
 import {
-  ClassSerializerInterceptor,
   Controller,
   Get,
   Post,
@@ -7,7 +6,6 @@ import {
   Delete,
   Body,
   Param,
-  UseInterceptors,
   ParseUUIDPipe,
   HttpCode,
 } from '@nestjs/common';
@@ -16,7 +14,7 @@ import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
 import { Artist } from './entities/artists.interface';
 
-@Controller('artists')
+@Controller('artist')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
@@ -45,7 +43,7 @@ export class ArtistsController {
 
   @Delete(':id')
   @HttpCode(204)
-  delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<Artist> {
+  delete(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
     return this.artistsService.delete(id);
   }
 }

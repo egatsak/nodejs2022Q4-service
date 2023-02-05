@@ -7,6 +7,7 @@ import { Artist } from './entities/artists.interface';
 @Injectable()
 export class ArtistsService {
   constructor(private readonly db: Db) {}
+
   async create(createArtistDto: CreateArtistDto): Promise<Artist> {
     const artist = await this.db.createArtist(createArtistDto);
     return artist;
@@ -32,9 +33,34 @@ export class ArtistsService {
     return artist;
   }
 
-  async delete(id: string): Promise<Artist> {
+  async delete(id: string): Promise<void> {
     const artist = await this.getById(id);
+    if (!artist) throw new NotFoundException(`Artist not found!`);
+
+    const albums = await this.db.getAllAlbumsByKey({
+      key: 'artistId',
+      equals: artist.id,
+    });
+
+    const tracks = await this.db.getAllTracksByKey({
+      key: 'artistId',
+      equals: artist.id,
+    });
+
+    await Promise.all(
+      albums.map(
+        async (album) =>
+          await this.db.updateAlbum(album.id, { ...album, artistId: null }),
+      ),
+    );
+
+    await Promise.all(
+      tracks.map(
+        async (track) =>
+          await this.db.updateTrack(track.id, { ...track, artistId: null }),
+      ),
+    );
+    await this.db.removeArtistFromFavs(id);
     await this.db.deleteArtist(id);
-    return artist;
   }
 }

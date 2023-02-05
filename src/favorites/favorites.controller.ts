@@ -2,44 +2,52 @@ import {
   Controller,
   Get,
   Post,
-  Body,
-  Patch,
   Param,
   Delete,
+  HttpCode,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { FavoritesService } from './favorites.service';
-import { CreateFavoriteDto } from './dto/create-favorite.dto';
-import { UpdateFavoriteDto } from './dto/update-favorite.dto';
 
-@Controller('favorites')
+@Controller('favs')
 export class FavoritesController {
   constructor(private readonly favoritesService: FavoritesService) {}
 
-  @Post()
-  create(@Body() createFavoriteDto: CreateFavoriteDto) {
-    return this.favoritesService.create(createFavoriteDto);
-  }
-
   @Get()
   findAll() {
-    return this.favoritesService.findAll();
+    return this.favoritesService.findAllAndPopulate();
   }
 
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.favoritesService.findOne(+id);
+  @Post('artist/:id')
+  async addArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.addArtist(id);
   }
 
-  @Patch(':id')
-  update(
-    @Param('id') id: string,
-    @Body() updateFavoriteDto: UpdateFavoriteDto,
-  ) {
-    return this.favoritesService.update(+id, updateFavoriteDto);
+  @Delete('artist/:id')
+  @HttpCode(204)
+  async removeArtist(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeArtist(id);
   }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.favoritesService.remove(+id);
+  @Post('album/:id')
+  async addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.addAlbum(id);
+  }
+
+  @Delete('album/:id')
+  @HttpCode(204)
+  async removeAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeAlbum(id);
+  }
+
+  @Post('track/:id')
+  async addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.addTrack(id);
+  }
+
+  @Delete('track/:id')
+  @HttpCode(204)
+  async removeTrack(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.favoritesService.removeTrack(id);
   }
 }
