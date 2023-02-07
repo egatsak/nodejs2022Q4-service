@@ -4,7 +4,6 @@
 
 - Git - [Download & Install Git](https://git-scm.com/downloads).
 - Node.js - [Download & Install Node.js](https://nodejs.org/en/download/) and the npm package manager.
-
 ## Downloading
 
 ```
@@ -16,6 +15,10 @@ git clone {repository URL}
 ```
 npm install
 ```
+
+## Adding .env
+
+Please create `.env` file in the root and add `PORT=4000` to it!
 
 ## Running application
 
