@@ -3,19 +3,42 @@ import {
   NotFoundException,
   UnprocessableEntityException,
 } from '@nestjs/common/exceptions';
-import { Db } from 'src/db/db.service';
-import { FavoritesResponse } from './entities/favorite.entity';
+import { InjectRepository } from '@nestjs/typeorm';
+import { AlbumRepository } from 'src/albums/albums.repository';
+import { ArtistRepository } from 'src/artists/artists.repository';
+import { TrackRepository } from 'src/tracks/tracks.repository';
+import { Repository } from 'typeorm';
+import {
+  FavoriteAlbum,
+  FavoriteArtist,
+  FavoritesResponse,
+  FavoriteTrack,
+} from './entities/favorite.entity';
 
 @Injectable()
 export class FavoritesService {
-  constructor(private readonly db: Db) {}
+  constructor(
+    private albumRepository: AlbumRepository,
+    private trackRepository: TrackRepository,
+    private artistRepository: ArtistRepository,
+    @InjectRepository(FavoriteTrack)
+    private favoriteTrackRepository: Repository<FavoriteTrack>,
+    @InjectRepository(FavoriteAlbum)
+    private favoriteAlbumRepository: Repository<FavoriteAlbum>,
+    @InjectRepository(FavoriteArtist)
+    private favoriteArtistRepository: Repository<FavoriteArtist>,
+  ) {}
 
   async findAll() {
-    return await this.db.getAllFavorites();
+    return {
+      artists: await this.artistRepository.getFavoriteArtists(),
+      albums: await this.albumRepository.getFavoriteAlbums(),
+      tracks: await this.trackRepository.getFavoriteTracks(),
+    };
   }
 
   async findAllAndPopulate() {
-    const { artists, albums, tracks } = await this.findAll();
+    /*    const { artists, albums, tracks } = await this.findAll();
 
     const artistsPopulated = await Promise.all(
       artists.map((id) => this.db.getArtistByKey({ key: 'id', equals: id })),
@@ -31,11 +54,11 @@ export class FavoritesService {
       artists: artistsPopulated,
       albums: albumsPopulated,
       tracks: tracksPopulated,
-    } as FavoritesResponse;
+    } as FavoritesResponse; */
   }
 
   async addArtist(id: string) {
-    const artist = await this.db.getArtistByKey({
+    /*  const artist = await this.db.getArtistByKey({
       key: 'id',
       equals: id,
     });
@@ -50,11 +73,11 @@ export class FavoritesService {
       );
     }
 
-    await this.db.addArtistToFavs(id);
+    await this.db.addArtistToFavs(id); */
   }
 
   async removeArtist(id: string) {
-    const artist = await this.db.getArtistByKey({
+    /* const artist = await this.db.getArtistByKey({
       key: 'id',
       equals: id,
     });
@@ -69,11 +92,11 @@ export class FavoritesService {
       );
     }
 
-    await this.db.removeArtistFromFavs(id);
+    await this.db.removeArtistFromFavs(id); */
   }
 
   async addAlbum(id: string) {
-    const album = await this.db.getAlbumByKey({
+    /*  const album = await this.db.getAlbumByKey({
       key: 'id',
       equals: id,
     });
@@ -87,11 +110,11 @@ export class FavoritesService {
         `This album was added to favorites earlier!`,
       );
 
-    await this.db.addAlbumToFavs(id);
+    await this.db.addAlbumToFavs(id); */
   }
 
   async removeAlbum(id: string) {
-    const album = await this.db.getAlbumByKey({
+    /*  const album = await this.db.getAlbumByKey({
       key: 'id',
       equals: id,
     });
@@ -106,11 +129,11 @@ export class FavoritesService {
       );
     }
 
-    await this.db.removeAlbumFromFavs(id);
+    await this.db.removeAlbumFromFavs(id); */
   }
 
   async addTrack(id: string) {
-    const track = await this.db.getTrackByKey({
+    /*  const track = await this.db.getTrackByKey({
       key: 'id',
       equals: id,
     });
@@ -124,11 +147,11 @@ export class FavoritesService {
         `This track was added to favorites earlier!`,
       );
 
-    await this.db.addTrackToFavs(id);
+    await this.db.addTrackToFavs(id); */
   }
 
   async removeTrack(id: string) {
-    const track = await this.db.getTrackByKey({
+    /*   const track = await this.db.getTrackByKey({
       key: 'id',
       equals: id,
     });
@@ -143,6 +166,6 @@ export class FavoritesService {
       );
     }
 
-    await this.db.removeTrackFromFavs(id);
+    await this.db.removeTrackFromFavs(id); */
   }
 }

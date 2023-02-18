@@ -46,12 +46,13 @@ export class UsersService {
     const updatedUser = await this.userRepository.save({
       ...user,
       password: newHashedPassword,
+      version: user.version + 1,
     });
 
     return updatedUser;
   }
 
-  async deleteUser(id: string) {
+  async deleteUser(id: string): Promise<void> {
     const result = await this.userRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException();

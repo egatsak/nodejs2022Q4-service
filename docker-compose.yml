@@ -31,7 +31,7 @@ services:
       - APP_EXPIRES=${TOKEN_EXPIRE_TIME}
       - APP_PORT=${PORT}
     ports: 
-      - "3000:3000" # expose-to-the-world : only-in-the-docker
+      - "4000:4000" # expose-to-the-world : only-in-the-docker
     container_name: nest-rest-service
     depends_on: 
       - db

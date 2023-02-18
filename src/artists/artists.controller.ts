@@ -12,24 +12,24 @@ import {
 import { ArtistsService } from './artists.service';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Artist } from './entities/artists.interface';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Controller('artist')
 export class ArtistsController {
   constructor(private readonly artistsService: ArtistsService) {}
 
   @Post()
-  create(@Body() createArtistDto: CreateArtistDto): Promise<Artist> {
+  create(@Body() createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
     return this.artistsService.create(createArtistDto);
   }
 
   @Get()
-  getAll(): Promise<Artist[]> {
+  getAll(): Promise<ArtistEntity[]> {
     return this.artistsService.getAll();
   }
 
   @Get(':id')
-  getById(@Param('id', new ParseUUIDPipe()) id: string): Promise<Artist> {
+  getById(@Param('id', new ParseUUIDPipe()) id: string): Promise<ArtistEntity> {
     return this.artistsService.getById(id);
   }
 
@@ -37,7 +37,7 @@ export class ArtistsController {
   update(
     @Param('id', new ParseUUIDPipe()) id: string,
     @Body() updateArtist: UpdateArtistDto,
-  ): Promise<Artist> {
+  ): Promise<ArtistEntity> {
     return this.artistsService.update(id, updateArtist);
   }
 

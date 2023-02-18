@@ -1,40 +1,50 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Db } from 'src/db/db.service';
+import { AlbumRepository } from 'src/albums/albums.repository';
+import { TrackRepository } from 'src/tracks/tracks.repository';
+import { ArtistRepository } from './artists.repository';
 import { CreateArtistDto } from './dto/create-artist.dto';
 import { UpdateArtistDto } from './dto/update-artist.dto';
-import { Artist } from './entities/artists.interface';
+import { ArtistEntity } from './entities/artist.entity';
 
 @Injectable()
 export class ArtistsService {
-  constructor(private readonly db: Db) {}
+  constructor(
+    private artistRepository: ArtistRepository,
+    private albumRepository: AlbumRepository,
+    private trackRepository: TrackRepository,
+  ) {}
 
-  async create(createArtistDto: CreateArtistDto): Promise<Artist> {
-    const artist = await this.db.createArtist(createArtistDto);
+  async create(createArtistDto: CreateArtistDto): Promise<ArtistEntity> {
+    const artist = await this.artistRepository.save(createArtistDto);
     return artist;
   }
 
-  async getAll(): Promise<Artist[]> {
-    return await this.db.getAllArtists();
+  async getAll(): Promise<ArtistEntity[]> {
+    return await this.artistRepository.find();
   }
 
-  async getById(id: string): Promise<Artist> {
-    const artist = await this.db.getArtistByKey({ key: 'id', equals: id });
+  async getById(id: string): Promise<ArtistEntity> {
+    const artist = await this.artistRepository.findOne({ where: { id } });
     if (!artist) {
       throw new NotFoundException();
     }
     return artist;
   }
 
-  async update(id: string, updateArtistDto: UpdateArtistDto): Promise<Artist> {
-    const artist = await this.db.updateArtist(id, updateArtistDto);
+  async update(
+    id: string,
+    updateArtistDto: UpdateArtistDto,
+  ): Promise<ArtistEntity> {
+    const artist = await this.getById(id);
     if (!artist) {
       throw new NotFoundException();
     }
-    return artist;
+    await this.artistRepository.update(id, updateArtistDto);
+    return Object.assign(artist, updateArtistDto);
   }
 
   async delete(id: string): Promise<void> {
-    const artist = await this.getById(id);
+    /*     const artist = await this.getById(id);
     if (!artist) throw new NotFoundException(`Artist not found!`);
 
     const albums = await this.db.getAllAlbumsByKey({
@@ -61,6 +71,6 @@ export class ArtistsService {
       ),
     );
     await this.db.removeArtistFromFavs(id);
-    await this.db.deleteArtist(id);
+    await this.db.deleteArtist(id); */
   }
 }

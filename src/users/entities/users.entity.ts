@@ -1,10 +1,10 @@
 import {
-  BaseEntity,
   Column,
   Entity,
   CreateDateColumn,
   PrimaryGeneratedColumn,
   Unique,
+  UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 import bcrypt from 'bcrypt';
@@ -25,7 +25,7 @@ export type UserResponse = Omit<
 
 @Entity()
 @Unique(['login'])
-export class UserEntity extends BaseEntity {
+export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -38,7 +38,7 @@ export class UserEntity extends BaseEntity {
   @CreateDateColumn()
   createdAt: number;
 
-  @CreateDateColumn()
+  @UpdateDateColumn()
   updatedAt: number;
 
   @Column({ type: 'varchar' })
