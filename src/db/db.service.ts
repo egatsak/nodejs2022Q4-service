@@ -1,6 +1,6 @@
-import { Injectable } from '@nestjs/common';
+/* import { Injectable } from '@nestjs/common';
 import { v4 as uuid } from 'uuid';
-import { User } from 'src/users/users.interface';
+import { UserEntity } from 'src/users/entities/users.entity';
 import { Artist } from 'src/artists/entities/artists.interface';
 import { Album } from 'src/albums/entities/album.entity';
 import { Track } from 'src/tracks/entities/tracks.interface';
@@ -16,7 +16,7 @@ import { UpdateTrackDto } from 'src/tracks/dto/update-track.dto';
 
 @Injectable()
 export class Db {
-  private readonly users: User[] = [];
+  private readonly users: UserEntity[] = [];
   private readonly artists: Artist[] = [];
   private readonly albums: Album[] = [];
   private readonly tracks: Track[] = [];
@@ -28,17 +28,17 @@ export class Db {
 
   /// === USERS ===
 
-  async getAllUsers(): Promise<User[]> {
+  async getAllUsers(): Promise<UserEntity[]> {
     return this.users;
   }
 
-  async getUserByKey({ key, equals }): Promise<User | null> {
+  async getUserByKey({ key, equals }): Promise<UserEntity | null> {
     const user = this.users.find((user) => user[key] === equals);
     return user;
   }
 
-  async createUser(dto: CreateUserDto): Promise<User> {
-    const newUser: User = {
+  async createUser(dto: CreateUserDto): Promise<UserEntity> {
+    const newUser = {
       ...dto,
       id: uuid(),
       version: 1,
@@ -52,7 +52,7 @@ export class Db {
   }
 
   async updateUser(id: string, dto: UpdateUserDto): Promise<User | null> {
-    /*     const index = this.users.findIndex((user) => user.id === id); */
+    /*     const index = this.users.findIndex((user) => user.id === id); 
     const user = this.users.find((user) => user.id === id);
 
     if (!user) {
@@ -233,3 +233,4 @@ export class Db {
     this.favorites.tracks.splice(index, 1);
   }
 }
+ */
