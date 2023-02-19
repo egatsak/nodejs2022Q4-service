@@ -29,7 +29,7 @@ export class FavoritesService {
     private favoriteArtistRepository: Repository<FavoriteArtist>,
   ) {}
 
-  async findAll() {
+  async findAll(): Promise<FavoritesResponse> {
     return {
       artists: await this.artistRepository.getFavoriteArtists(),
       albums: await this.albumRepository.getFavoriteAlbums(),
@@ -58,114 +58,110 @@ export class FavoritesService {
   }
 
   async addArtist(id: string) {
-    /*  const artist = await this.db.getArtistByKey({
-      key: 'id',
-      equals: id,
-    });
+    const artist = await this.artistRepository.findOneBy({ id });
 
     if (!artist) throw new UnprocessableEntityException(`Artist not found!`);
 
-    const favArtists = (await this.findAll()).artists;
+    /*     const favArtist = await this.favoriteArtistRepository.exist({
+      where: { id },
+    });
 
-    if (favArtists.includes(id)) {
+    if (favArtist) {
       throw new UnprocessableEntityException(
         `This artist was added to favorites earlier!`,
       );
-    }
-
-    await this.db.addArtistToFavs(id); */
+    } */
+    console.log(artist);
+    return await this.favoriteArtistRepository.save(new FavoriteArtist(artist));
   }
 
   async removeArtist(id: string) {
-    /* const artist = await this.db.getArtistByKey({
-      key: 'id',
-      equals: id,
-    });
+    const artist = await this.artistRepository.findOne({ where: { id } });
 
     if (!artist) throw new NotFoundException(`Artist not found!`);
 
-    const favArtists = (await this.findAll()).artists;
+    const favArtist = await this.favoriteArtistRepository.findOne({
+      where: { id },
+    });
+    console.log(favArtist);
+    console.log(await this.favoriteArtistRepository.find());
 
-    if (!favArtists.includes(id)) {
+    if (!favArtist) {
       throw new UnprocessableEntityException(
         `This artist is not in the favorites list!`,
       );
     }
 
-    await this.db.removeArtistFromFavs(id); */
+    await this.favoriteArtistRepository.delete({ id });
   }
 
   async addAlbum(id: string) {
-    /*  const album = await this.db.getAlbumByKey({
-      key: 'id',
-      equals: id,
-    });
+    const album = await this.albumRepository.findOneBy({ id });
 
     if (!album) throw new UnprocessableEntityException(`Album not found!`);
 
-    const favAlbums = (await this.findAll()).albums;
+    /*     const favAlbum = await this.favoriteAlbumRepository.exist({
+      where: { id },
+    });
 
-    if (favAlbums.includes(id))
+    if (favAlbum) {
       throw new UnprocessableEntityException(
         `This album was added to favorites earlier!`,
       );
+    } */
 
-    await this.db.addAlbumToFavs(id); */
+    return await this.favoriteAlbumRepository.save(new FavoriteAlbum(album));
   }
 
   async removeAlbum(id: string) {
-    /*  const album = await this.db.getAlbumByKey({
-      key: 'id',
-      equals: id,
-    });
+    const album = await this.albumRepository.findOne({ where: { id } });
 
     if (!album) throw new NotFoundException(`Album not found!`);
 
-    const favAlbums = (await this.findAll()).albums;
-
-    if (!favAlbums.includes(id)) {
+    const favAlbum = await this.favoriteAlbumRepository.findOneBy({
+      album: { id },
+    });
+    console.log(await this.favoriteAlbumRepository.find());
+    console.log(favAlbum);
+    if (!favAlbum) {
       throw new UnprocessableEntityException(
         `This album is not in the favorites list!`,
       );
     }
 
-    await this.db.removeAlbumFromFavs(id); */
+    await this.favoriteAlbumRepository.delete({ album: { id } });
   }
 
   async addTrack(id: string) {
-    /*  const track = await this.db.getTrackByKey({
-      key: 'id',
-      equals: id,
-    });
+    const track = await this.trackRepository.findOneBy({ id });
 
     if (!track) throw new UnprocessableEntityException(`Track not found!`);
-
+    /*
     const favTracks = (await this.findAll()).tracks;
 
     if (favTracks.includes(id))
       throw new UnprocessableEntityException(
         `This track was added to favorites earlier!`,
       );
-
-    await this.db.addTrackToFavs(id); */
+*/
+    return await this.favoriteTrackRepository.save(new FavoriteTrack(track));
   }
 
   async removeTrack(id: string) {
-    /*   const track = await this.db.getTrackByKey({
-      key: 'id',
-      equals: id,
+    const track = await this.trackRepository.findOneBy({ id });
+
+    if (!track) throw new UnprocessableEntityException(`Track not found!`);
+
+    const favTrack = await this.favoriteTrackRepository.exist({
+      where: { id },
     });
 
-    if (!track) throw new NotFoundException(`Track not found!`);
-
-    const favTracks = (await this.findAll()).tracks;
-
-    if (!favTracks.includes(id)) {
+    if (!favTrack) {
       throw new UnprocessableEntityException(
         `This track is not in the favorites list!`,
       );
     }
 
-    await this.db.removeTrackFromFavs(id); */
+    await this.favoriteTrackRepository.delete({ track: { id } });
   }
 }

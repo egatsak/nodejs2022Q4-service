@@ -9,10 +9,14 @@ export class AlbumRepository extends Repository<AlbumEntity> {
   }
 
   async getFavoriteAlbums(): Promise<AlbumEntity[]> {
-    return await this.createQueryBuilder('album')
-      .select('album')
-      .leftJoinAndSelect('album.artist', 'artist')
-      .innerJoin('favorite_album', 'favorites', 'favorites.albumId = album.id')
+    return await this.createQueryBuilder('album_entity')
+      .select('album_entity')
+      .leftJoinAndSelect('album_entity.artistId', 'artist_entity')
+      .innerJoin(
+        'favorite_album',
+        'favorites_entity',
+        'favorites_entity.albumId = album_entity.id',
+      )
       .getMany();
   }
 }

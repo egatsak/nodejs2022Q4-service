@@ -9,14 +9,14 @@ const typeOrmConfig: DataSourceOptions = {
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.POSTGRES_DB || 'rest_service',
   entities: [__dirname + '/**/*.entity.ts', __dirname + '/**/*.entity.js'],
-  migrationsRun: false,
+  migrationsRun: true,
   logging: true,
   migrationsTableName: 'migration',
   migrations: [
     __dirname + '/migration/**/*.ts',
     __dirname + '/migration/**/*.js',
   ],
-  synchronize: false,
+  synchronize: true,
 };
 
 export default typeOrmConfig;

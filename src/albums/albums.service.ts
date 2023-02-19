@@ -37,7 +37,9 @@ export class AlbumsService {
   }
 
   async update(id: string, updateAlbumDto: UpdateAlbumDto) {
-    const artist = await this.artistRepository.findOneBy({ id });
+    const artist = await this.artistRepository.findOneBy({
+      id: updateAlbumDto.artistId,
+    });
     if (!artist) {
       throw new NotFoundException();
     }
@@ -46,7 +48,7 @@ export class AlbumsService {
       throw new NotFoundException();
     }
     await this.albumRepository.update(id, updateAlbumDto);
-    return Object.assign(artist, updateAlbumDto);
+    return Object.assign(album, updateAlbumDto);
   }
 
   async remove(id: string) {
@@ -66,5 +68,10 @@ export class AlbumsService {
 
     await this.db.removeAlbumFromFavs(id);
     await this.db.deleteAlbum(id); */
+    const album = await this.albumRepository.findOneBy({ id });
+    if (!album) {
+      throw new NotFoundException();
+    }
+    await this.albumRepository.delete(id);
   }
 }

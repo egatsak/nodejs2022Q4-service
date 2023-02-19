@@ -3,66 +3,49 @@ import {
   Entity,
   CreateDateColumn,
   PrimaryGeneratedColumn,
-  Unique,
+  /*   Unique, */
   UpdateDateColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
-import bcrypt from 'bcrypt';
 
 export type UserResponse = Omit<
   UserEntity,
-  | 'password'
-  | 'validatePassword'
-  | 'toResponse'
-  | 'hasId'
-  | 'save'
-  | 'remove'
-  | 'softRemove'
-  | 'recover'
-  | 'reload'
-  | 'hashPassword'
->;
+  'password' | 'toResponse' | 'createdAt' | 'updatedAt'
+> & { createdAt: number; updatedAt: number };
 
 @Entity()
-@Unique(['login'])
+/* @Unique(['login']) */
 export class UserEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column({ type: 'varchar' })
+  @Column()
   login: string;
 
-  @Column({ type: 'int' })
+  @Column({ default: 1 })
   version: number;
 
   @CreateDateColumn()
-  createdAt: number;
+  createdAt: Date;
 
   @UpdateDateColumn()
-  updatedAt: number;
+  updatedAt: Date;
 
-  @Column({ type: 'varchar' })
+  @Column()
   @Exclude()
   password: string;
-  /* 
+
   constructor(partial: Partial<UserEntity>) {
-    super();
     Object.assign(this, partial);
-  } */
-
-  async hashPassword(password: string): Promise<string> {
-    const hashed = await bcrypt.hash(password, +process.env.SALT || 10);
-    return hashed;
-  }
-
-  async validatePassword(password: string): Promise<boolean> {
-    const match = await bcrypt.compare(password, this.password);
-    return match;
   }
 
   toResponse(): UserResponse {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { password, ...rest } = this;
-    return rest;
+    const { password, createdAt, updatedAt, ...rest } = this;
+    return {
+      ...rest,
+      createdAt: createdAt.getTime(),
+      updatedAt: updatedAt.getTime(),
+    };
   }
 }

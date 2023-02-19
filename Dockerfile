@@ -13,7 +13,7 @@ RUN npm install
 # Copy current directory to APP folder
 COPY . /app/
 
-EXPOSE 4000
+EXPOSE ${PORT}
 
 VOLUME ["/app/data"]
 

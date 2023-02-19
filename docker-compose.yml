@@ -13,12 +13,13 @@ services:
     networks:
       - db
     ports: 
-      - "5432:5432"
+      - "${POSTGRES_PORT}:5432"
   nestjs:
     build: 
       context: .
       dockerfile: ./Dockerfile
     image: nestjs-rest-service
+    restart: on-failure
     environment: 
       - DB_TYPE=${DB_TYPE}
       - POSTGRES_HOST=${POSTGRES_HOST}
@@ -31,7 +32,7 @@ services:
       - APP_EXPIRES=${TOKEN_EXPIRE_TIME}
       - APP_PORT=${PORT}
     ports: 
-      - "4000:4000" # expose-to-the-world : only-in-the-docker
+      - "${PORT}:${PORT}" # expose-to-the-world : only-in-the-docker
     container_name: nest-rest-service
     depends_on: 
       - db

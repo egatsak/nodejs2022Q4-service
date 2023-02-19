@@ -9,11 +9,15 @@ export class TrackRepository extends Repository<TrackEntity> {
   }
 
   async getFavoriteTracks(): Promise<TrackEntity[]> {
-    return this.createQueryBuilder('track')
-      .select('track')
-      .leftJoinAndSelect('track.album', 'album')
-      .leftJoinAndSelect('track.artist', 'artist')
-      .innerJoin('favorite_track', 'favorites', 'favorites.trackId = track.id')
+    return this.createQueryBuilder('track_entity')
+      .select('track_entity')
+      .leftJoinAndSelect('track_entity.albumId', 'album_entity')
+      .leftJoinAndSelect('track_entity.artistId', 'artist_entity')
+      .innerJoin(
+        'favorite_track',
+        'favorites_entity',
+        'favorites_entity.trackId = track_entity.id',
+      )
       .getMany();
   }
 }

@@ -10,7 +10,7 @@ import configService from './typeorm.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, envFilePath: '.env' }),
+    ConfigModule.forRoot({ isGlobal: true, envFilePath: '../.env' }),
     TypeOrmModule.forRoot(configService),
     UsersModule,
     ArtistsModule,

@@ -9,12 +9,12 @@ export class ArtistRepository extends Repository<ArtistEntity> {
   }
 
   async getFavoriteArtists(): Promise<ArtistEntity[]> {
-    return this.createQueryBuilder('artist')
-      .select('artist')
+    return this.createQueryBuilder('artist_entity')
+      .select('artist_entity')
       .innerJoin(
         'favorite_artist',
-        'favorites',
-        'favorites.artistId = artist.id',
+        'favorites_entity',
+        'favorites_entity.artistId = artist_entity.id',
       )
       .getMany();
   }

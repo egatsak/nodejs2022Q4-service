@@ -15,7 +15,7 @@ export class FavoritesController {
 
   @Get()
   findAll() {
-    return this.favoritesService.findAllAndPopulate();
+    return this.favoritesService.findAll();
   }
 
   @Post('artist/:id')

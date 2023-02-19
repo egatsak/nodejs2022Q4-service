@@ -75,5 +75,10 @@ export class TracksService {
     if (!track) throw new NotFoundException();
     await this.db.removeTrackFromFavs(id);
     return await this.db.deleteTrack(id); */
+    const track = await this.trackRepository.findOneBy({ id });
+    if (!track) {
+      throw new NotFoundException();
+    }
+    await this.trackRepository.delete(id);
   }
 }

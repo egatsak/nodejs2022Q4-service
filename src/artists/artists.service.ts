@@ -24,7 +24,7 @@ export class ArtistsService {
   }
 
   async getById(id: string): Promise<ArtistEntity> {
-    const artist = await this.artistRepository.findOne({ where: { id } });
+    const artist = await this.artistRepository.findOneBy({ id });
     if (!artist) {
       throw new NotFoundException();
     }
@@ -72,5 +72,10 @@ export class ArtistsService {
     );
     await this.db.removeArtistFromFavs(id);
     await this.db.deleteArtist(id); */
+    const artist = await this.artistRepository.findOne({ where: { id } });
+    if (!artist) {
+      throw new NotFoundException();
+    }
+    await this.artistRepository.delete(id);
   }
 }
