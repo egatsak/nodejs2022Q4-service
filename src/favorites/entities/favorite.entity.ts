@@ -25,7 +25,7 @@ export class FavoriteAlbum {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => AlbumEntity, null, { onDelete: 'CASCADE', eager: true })
+  @ManyToOne(() => AlbumEntity, null, { onDelete: 'CASCADE' })
   album: AlbumEntity;
 }
 
@@ -38,7 +38,7 @@ export class FavoriteTrack {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @ManyToOne(() => TrackEntity, null, { onDelete: 'CASCADE', eager: true })
+  @ManyToOne(() => TrackEntity, null, { onDelete: 'CASCADE' })
   track: TrackEntity;
 }
 

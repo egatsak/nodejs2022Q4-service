@@ -62,7 +62,7 @@ export class FavoritesService {
 
     if (!artist) throw new UnprocessableEntityException(`Artist not found!`);
 
-    /*     const favArtist = await this.favoriteArtistRepository.exist({
+    const favArtist = await this.favoriteArtistRepository.exist({
       where: { id },
     });
 
@@ -70,8 +70,8 @@ export class FavoritesService {
       throw new UnprocessableEntityException(
         `This artist was added to favorites earlier!`,
       );
-    } */
-    console.log(artist);
+    }
+
     return await this.favoriteArtistRepository.save(new FavoriteArtist(artist));
   }
 
@@ -80,8 +80,8 @@ export class FavoritesService {
 
     if (!artist) throw new NotFoundException(`Artist not found!`);
 
-    const favArtist = await this.favoriteArtistRepository.findOne({
-      where: { id },
+    const favArtist = await this.favoriteArtistRepository.findOneBy({
+      artist: { id },
     });
     console.log(favArtist);
     console.log(await this.favoriteArtistRepository.find());
@@ -92,7 +92,7 @@ export class FavoritesService {
       );
     }
 
-    await this.favoriteArtistRepository.delete({ id });
+    await this.favoriteArtistRepository.delete({ artist: { id } });
   }
 
   async addAlbum(id: string) {
@@ -100,7 +100,7 @@ export class FavoritesService {
 
     if (!album) throw new UnprocessableEntityException(`Album not found!`);
 
-    /*     const favAlbum = await this.favoriteAlbumRepository.exist({
+    const favAlbum = await this.favoriteAlbumRepository.exist({
       where: { id },
     });
 
@@ -108,7 +108,7 @@ export class FavoritesService {
       throw new UnprocessableEntityException(
         `This album was added to favorites earlier!`,
       );
-    } */
+    }
 
     return await this.favoriteAlbumRepository.save(new FavoriteAlbum(album));
   }
@@ -121,8 +121,7 @@ export class FavoritesService {
     const favAlbum = await this.favoriteAlbumRepository.findOneBy({
       album: { id },
     });
-    console.log(await this.favoriteAlbumRepository.find());
-    console.log(favAlbum);
+
     if (!favAlbum) {
       throw new UnprocessableEntityException(
         `This album is not in the favorites list!`,
@@ -136,14 +135,15 @@ export class FavoritesService {
     const track = await this.trackRepository.findOneBy({ id });
 
     if (!track) throw new UnprocessableEntityException(`Track not found!`);
-    /*
-    const favTracks = (await this.findAll()).tracks;
+    const favTrack = await this.favoriteTrackRepository.exist({
+      where: { id },
+    });
 
-    if (favTracks.includes(id))
+    if (favTrack) {
       throw new UnprocessableEntityException(
-        `This track was added to favorites earlier!`,
+        `This album was added to favorites earlier!`,
       );
-*/
+    }
     return await this.favoriteTrackRepository.save(new FavoriteTrack(track));
   }
 
@@ -152,8 +152,8 @@ export class FavoritesService {
 
     if (!track) throw new UnprocessableEntityException(`Track not found!`);
 
-    const favTrack = await this.favoriteTrackRepository.exist({
-      where: { id },
+    const favTrack = await this.favoriteTrackRepository.findOneBy({
+      track: { id },
     });
 
     if (!favTrack) {

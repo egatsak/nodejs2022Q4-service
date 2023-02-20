@@ -1,7 +1,7 @@
 /* import { TypeOrmModuleOptions } from '@nestjs/typeorm'; */
-import { DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 
-const typeOrmConfig: DataSourceOptions = {
+export const typeOrmConfig: DataSourceOptions = {
   type: 'postgres',
   host: process.env.POSTGRES_HOST || 'postgres-db',
   port: +process.env.POSTGRES_PORT || 5432,
@@ -19,4 +19,13 @@ const typeOrmConfig: DataSourceOptions = {
   synchronize: true,
 };
 
-export default typeOrmConfig;
+export const appDataSource = new DataSource(typeOrmConfig);
+
+appDataSource
+  .initialize()
+  .then(() => {
+    console.log('Data Source has been initialization');
+  })
+  .catch((err) => {
+    console.error('Error during Data Source initialization', err);
+  });
