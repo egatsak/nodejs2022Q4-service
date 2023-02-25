@@ -1,6 +1,6 @@
 import { Entity, Column, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { ArtistEntity } from '../../artists/entities/artist.entity';
 import { Expose, Transform } from 'class-transformer';
+import { Artist } from '../../artists/entities/artist.entity';
 
 interface IAlbum {
   id: string; // uuid v4
@@ -10,7 +10,7 @@ interface IAlbum {
 }
 
 @Entity()
-export class AlbumEntity implements IAlbum {
+export class Album implements IAlbum {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -20,7 +20,7 @@ export class AlbumEntity implements IAlbum {
   @Column()
   year: number;
 
-  @ManyToOne(() => ArtistEntity, null, { onDelete: 'SET NULL', eager: true })
+  @ManyToOne(() => Artist, null, { onDelete: 'SET NULL', eager: true })
   @Expose({ name: 'artistId' })
   @Transform(({ value }) => (value ? value.id : null))
   artistId: string | null;

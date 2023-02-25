@@ -1,14 +1,14 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { ArtistEntity } from './entities/artist.entity';
+import { Artist } from './entities/artist.entity';
 
 @Injectable()
-export class ArtistRepository extends Repository<ArtistEntity> {
+export class ArtistRepository extends Repository<Artist> {
   constructor(private dataSource: DataSource) {
-    super(ArtistEntity, dataSource.createEntityManager());
+    super(Artist, dataSource.createEntityManager());
   }
 
-  async getFavoriteArtists(): Promise<ArtistEntity[]> {
+  async getFavoriteArtists(): Promise<Artist[]> {
     return this.createQueryBuilder('artist_entity')
       .select('artist_entity')
       .innerJoin(

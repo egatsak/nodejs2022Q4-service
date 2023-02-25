@@ -11,9 +11,10 @@ services:
     volumes:
       - ./pgdata:/var/lib/postgresql/data
     networks:
-      - db
+      - db_network
     ports: 
       - "${POSTGRES_PORT}:5432"
+
   nestjs:
     build: 
       context: .
@@ -37,10 +38,12 @@ services:
     depends_on: 
       - db
     networks:
-      - db
+      - db_network
     volumes: 
       - .:/app
-      - /app/node_modules    
+      - /app/node_modules   
+      - migrations:/usr/app/migrations 
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -56,10 +59,12 @@ services:
     depends_on: 
       - db
     networks:
-      - db
+      - db_network
 volumes:
   pgdata:
   pgadmin-data:
+  migrations:
 
 networks:
-  db:
+  db_network:
+    driver: bridge

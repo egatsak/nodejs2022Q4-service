@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { AlbumRepository } from 'src/albums/albums.repository';
-import { ArtistRepository } from 'src/artists/artists.repository';
+import { AlbumRepository } from '../albums/albums.repository';
+import { ArtistRepository } from '../artists/artists.repository';
 import { CreateTrackDto } from './dto/create-track.dto';
 import { UpdateTrackDto } from './dto/update-track.dto';
 import { TrackRepository } from './tracks.repository';
@@ -71,10 +71,6 @@ export class TracksService {
   }
 
   async remove(id: string) {
-    /*     const track = await this.db.getTrackByKey({ key: 'id', equals: id });
-    if (!track) throw new NotFoundException();
-    await this.db.removeTrackFromFavs(id);
-    return await this.db.deleteTrack(id); */
     const track = await this.trackRepository.findOneBy({ id });
     if (!track) {
       throw new NotFoundException();

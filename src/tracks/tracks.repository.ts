@@ -1,14 +1,14 @@
 import { DataSource, Repository } from 'typeorm';
 import { Injectable } from '@nestjs/common';
-import { TrackEntity } from './entities/track.entity';
+import { Track } from './entities/track.entity';
 
 @Injectable()
-export class TrackRepository extends Repository<TrackEntity> {
+export class TrackRepository extends Repository<Track> {
   constructor(private dataSource: DataSource) {
-    super(TrackEntity, dataSource.createEntityManager());
+    super(Track, dataSource.createEntityManager());
   }
 
-  async getFavoriteTracks(): Promise<TrackEntity[]> {
+  async getFavoriteTrack(): Promise<Track[]> {
     return this.createQueryBuilder('track_entity')
       .select('track_entity')
       .leftJoinAndSelect('track_entity.albumId', 'album_entity')

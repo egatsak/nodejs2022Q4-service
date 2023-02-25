@@ -2,7 +2,7 @@ version: '1'
 services: 
   db:
     image: postgres
-    restart: always
+    restart: on-failure
     environment: 
       - POSTGRES_USER=${DATABASE_USER}
       - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
@@ -10,11 +10,17 @@ services:
     container_name: postgres-db
     volumes:
       - ./pgdata:/var/lib/postgresql/data
+    networks:
+      - db_network
+    ports: 
+      - "${POSTGRES_PORT}:5432"
+
   nestjs:
     build: 
       context: .
       dockerfile: ./Dockerfile
-    image: tusharchy/nest-and-postgres-application:latest
+    image: nestjs-rest-service
+    restart: on-failure
     environment: 
       - DB_TYPE=${DB_TYPE}
       - POSTGRES_HOST=${POSTGRES_HOST}
@@ -22,18 +28,22 @@ services:
       - POSTGRES_PASS=${DATABASE_PASSWORD}
       - POSTGRES_DB=${DB_NAME}
       - POSTGRES_SYNC=false
-      - JWT_SECRET=${JWT_SECRET}
+      - JWT_SECRET=${JWT_SECRET_KEY}
       - POSTGRES_PORT=${POSTGRES_PORT}
-      - APP_EXPIRES=${APP_EXPIRES}
-      - APP_PORT=${APP_PORT}
+      - APP_EXPIRES=${TOKEN_EXPIRE_TIME}
+      - APP_PORT=${PORT}
     ports: 
-      - "3000:3000" # expose-to-the-world : only-in-the-docker
-    container_name: nest-todo-app-be
+      - "${PORT}:${PORT}" # expose-to-the-world : only-in-the-docker
+    container_name: nest-rest-service
     depends_on: 
       - db
+    networks:
+      - db_network
     volumes: 
       - .:/app
-      - /app/node_modules
+      - /app/node_modules   
+      - migrations:/usr/app/migrations 
+
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -48,6 +58,13 @@ services:
       - ./pgadmin-data:/var/lib/pgadmin
     depends_on: 
       - db
-  volumes:
-    pgdata:
-    pgadmin-data:
+    networks:
+      - db_network
+volumes:
+  pgdata:
+  pgadmin-data:
+  migrations:
+
+networks:
+  db_network:
+    driver: bridge

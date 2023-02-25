@@ -8,7 +8,7 @@ WORKDIR /app
 COPY ./package.json ./package-lock.json /app/
 
 # Then install the NPM module
-RUN npm install
+RUN npm install && npm cache clean --force
 
 # Copy current directory to APP folder
 COPY . /app/

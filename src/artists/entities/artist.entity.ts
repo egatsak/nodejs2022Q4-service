@@ -7,7 +7,7 @@ interface IArtist {
 }
 
 @Entity()
-export class ArtistEntity implements IArtist {
+export class Artist implements IArtist {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

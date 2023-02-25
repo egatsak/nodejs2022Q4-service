@@ -20,10 +20,11 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "typeorm": "typeorm-ts-node-commonjs",
-    "typeorm:create": "npm run typeorm migration:create -- ./src/typeorm.config.ts",
-    "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/typeorm.config.ts",
+    "typeorm:create": "npm run typeorm migration:create -- ./migrations/rest-service",
+    "typeorm:generate": "npm run typeorm migration:generate -- -d ./src/typeorm.config.ts ./migrations/rest-service",
     "typeorm:run": "npm run typeorm migration:run -- -d ./src/typeorm.config.ts",
-    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/typeorm.config.ts"
+    "typeorm:revert": "npm run typeorm migration:revert -- -d ./src/typeorm.config.ts",
+    "scan": "docker scan postgres && docker scan nestjs-rest-service"
   },
   "dependencies": {
     "@nestjs/common": "^8.0.0",
@@ -44,7 +45,7 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "swagger-ui-express": "^4.6.0",
-    "typeorm": "^0.3.12",
+    "typeorm": "0.3.11",
     "uuid": "^8.3.2"
   },
   "devDependencies": {
@@ -90,5 +91,8 @@
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node"
+  },
+  "overrides": {
+    "glob": "7.2.3"
   }
 }

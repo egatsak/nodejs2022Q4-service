@@ -5,21 +5,16 @@ import { AlbumsController } from './albums.controller';
 import { AlbumRepository } from './albums.repository';
 import { TracksModule } from 'src/tracks/tracks.module';
 import { ArtistsModule } from 'src/artists/artists.module';
-import { AlbumEntity } from './entities/album.entity';
-import { ArtistEntity } from 'src/artists/entities/artist.entity';
-import { TrackEntity } from 'src/tracks/entities/track.entity';
-import { FavoritesEntity } from 'src/favorites/entities/favorite.entity';
+import { Album } from './entities/album.entity';
+import { Artist } from '../artists/entities/artist.entity';
+import { Track } from '../tracks/entities/track.entity';
+import { Favorites } from '../favorites/entities/favorite.entity';
 
 @Module({
   imports: [
     forwardRef(() => TracksModule),
     forwardRef(() => ArtistsModule),
-    TypeOrmModule.forFeature([
-      AlbumEntity,
-      ArtistEntity,
-      FavoritesEntity,
-      TrackEntity,
-    ]),
+    TypeOrmModule.forFeature([Album, Artist, Favorites, Track]),
   ],
   controllers: [AlbumsController],
   providers: [AlbumsService, AlbumRepository],
