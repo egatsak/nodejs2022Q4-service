@@ -10,7 +10,7 @@ const FILE_SIZE_KB = Number(process.env.FILE_SIZE_KB) || 10;
 @Injectable()
 export class LoggerToFileService {
   static syncErrorWriter(data: string): void {
-    const PATH = path.join(__dirname, '../../', `logs`);
+    const PATH = path.join(__dirname, '../../../', `logs`);
     mkdir(PATH, { recursive: true }, (err) => console.error(err));
     writeFileSync(`${PATH}/critical_errors.log`, `${data}${EOL}`, {
       flag: 'a+',
@@ -20,13 +20,11 @@ export class LoggerToFileService {
   async write(data: string): Promise<void> {
     const PATH = path.join(
       __dirname,
-      '../../',
-      `logs/${new Date().toISOString()}`,
+      '../../../',
+      `logs/${new Date().toUTCString()}`,
     );
-
     await fs.mkdir(PATH, { recursive: true });
     const files = await fs.readdir(PATH, { withFileTypes: true });
-
     const fileToWrite = await this.asyncFindFile<Dirent>(
       files,
       async (file) => {

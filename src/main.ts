@@ -1,9 +1,10 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, HttpAdapterHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
-import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { LoggerToFileService } from './utils/logger-service/logger-to-file.service';
 import { MyLoggerService } from './utils/logger-service/logger.service';
+import { AppModule } from './app.module';
+import { MyExceptionFilter } from './exceptions-filter';
 
 const PORT = process.env.PORT || 4000;
 
@@ -11,6 +12,15 @@ export let timeStarted = 0;
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.useLogger(app.get(MyLoggerService));
+
+  const httpAdapterHost = app.get(HttpAdapterHost);
+  app.useGlobalFilters(
+    new MyExceptionFilter(
+      httpAdapterHost,
+      new MyLoggerService(new LoggerToFileService()),
+    ),
+  );
 
   const config = new DocumentBuilder()
     .setTitle('Nest.js REST Service')
@@ -41,6 +51,7 @@ async function bootstrap() {
   process.on('unhandledRejection', (reason, promise) => {
     const fileLogger = new LoggerToFileService();
     const logger = new MyLoggerService(fileLogger);
+
     logger.error(
       `[UnhandledRejection] REASON: ${reason} \n PROMISE: ${JSON.stringify(
         promise,
