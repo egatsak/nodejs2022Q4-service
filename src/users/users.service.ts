@@ -70,15 +70,15 @@ export class UsersService {
     }
   }
 
-  async getByLogin(login: string): Promise<UserResponse> {
+  async getByLogin(login: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { login } });
     if (!user) {
       throw new NotFoundException();
     }
-    return user.toResponse();
+    return user;
   }
 
-  private async validatePassword(
+  async validatePassword(
     plaintextPassword: string,
     hash: string,
   ): Promise<boolean> {
@@ -86,7 +86,7 @@ export class UsersService {
     return equal;
   }
 
-  private async hashPassword(password: string): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     const hashed = await bcrypt.hash(password, +process.env.SALT || 10);
     return hashed;
   }
