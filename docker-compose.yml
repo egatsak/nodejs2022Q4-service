@@ -32,6 +32,7 @@ services:
       - POSTGRES_PORT=${POSTGRES_PORT}
       - APP_EXPIRES=${TOKEN_EXPIRE_TIME}
       - APP_PORT=${PORT}
+      - LVL_LOG=${LVL_LOG}
     ports: 
       - "${PORT}:${PORT}" # expose-to-the-world : only-in-the-docker
     container_name: nest-rest-service

@@ -14,7 +14,7 @@ git clone {repository URL}
 
 Then `cd nodejs2022q4-service`
 
-Then `git checkout feature-typeorm`
+Then `git checkout auth-logger`
 
 ## Installing NPM modules
 
