@@ -1,4 +1,3 @@
-/* import { TypeOrmModuleOptions } from '@nestjs/typeorm'; */
 import { DataSource, DataSourceOptions } from 'typeorm';
 
 export const typeOrmConfig: DataSourceOptions = {

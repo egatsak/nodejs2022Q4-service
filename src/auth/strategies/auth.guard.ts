@@ -20,7 +20,9 @@ export class AuthGuard implements CanActivate {
       const token = split[1];
 
       if (bearer !== 'Bearer' || !token) {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException(
+          `Please provide Authorization header with "Bearer: Token"`,
+        );
       }
 
       const user = this.jwtService.verify(token);
@@ -28,7 +30,7 @@ export class AuthGuard implements CanActivate {
       if (user) {
         return true;
       } else {
-        throw new UnauthorizedException();
+        throw new UnauthorizedException('Incorrect or expired token!');
       }
     } catch (e) {
       throw e;
