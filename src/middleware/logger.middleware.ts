@@ -9,9 +9,11 @@ export class LoggerMiddleware implements NestMiddleware {
 
   use(req: Request, res: Response, next: NextFunction) {
     res.on('finish', () => {
-      const { method, originalUrl } = req;
+      const { method, originalUrl, query, body } = req;
       const { statusCode, statusMessage } = res;
-      const message = `[HTTP] ${method} ${statusCode} ${originalUrl} MESSAGE: ${statusMessage} ${
+      const message = `[HTTP] ${method} ${statusCode} ${originalUrl} QUERY:${JSON.stringify(
+        query,
+      )} BODY: ${JSON.stringify(body)} MESSAGE: ${statusMessage} FROM_START: ${
         Date.now() - timeStarted
       }ms`;
 
