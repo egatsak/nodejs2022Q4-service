@@ -29,7 +29,7 @@ Please create `.env` file from `.env.example` !
 ## Running application
 
 ```
-docker-compose up -d
+docker-compose up
 ```
 
 This command creates 3 images and 3 containers. Default app exposed port is 4000, postgresql exposed port is 5432, pgadmin exposed port is 8080.
@@ -40,21 +40,11 @@ After starting the app on port (4000 as default) you can open
 in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
+Open the console or the Docker terminal for `nest-rest-service` container to observe logging.
+
 ## Testing
 
 After application running (please wait for the message `Server listening on port 4000`!) open new terminal and enter:
-
-To run all tests without authorization
-
-```
-npm run test
-```
-
-To run only one of all test suites
-
-```
-npm run test -- <path to suite>
-```
 
 To run all test with authorization
 
@@ -67,6 +57,12 @@ To run only specific test suite with authorization
 ```
 npm run test:auth -- <path to suite>
 ```
+
+NB! Some tests may fail due to timeout so please run them several times or increase the timeout for them (all the suite takes ~30sec to run).
+
+### Logs
+
+can be found in dist/logs folder
 
 ### Auto-fix and format
 
