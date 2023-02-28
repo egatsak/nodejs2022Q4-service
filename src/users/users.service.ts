@@ -7,14 +7,14 @@ import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdatePasswordDto } from './dto/update-password.dto';
-import { UserEntity, UserResponse } from './entities/users.entity';
+import { User, UserResponse } from './entities/users.entity';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersService {
   constructor(
-    @InjectRepository(UserEntity)
-    private userRepository: Repository<UserEntity>,
+    @InjectRepository(User)
+    private userRepository: Repository<User>,
   ) {}
 
   async getAll(): Promise<UserResponse[]> {
@@ -44,7 +44,6 @@ export class UsersService {
     id: string,
     dto: UpdatePasswordDto,
   ): Promise<UserResponse> {
-    console.log(dto);
     const user = await this.userRepository.findOne({ where: { id } });
     if (!user) {
       throw new NotFoundException(`User with ID ${id} was not found!`);
@@ -61,7 +60,7 @@ export class UsersService {
       version: user.version + 1,
     });
 
-    return new UserEntity(updatedUser).toResponse();
+    return new User(updatedUser).toResponse();
   }
 
   async deleteUser(id: string): Promise<void> {
@@ -71,15 +70,15 @@ export class UsersService {
     }
   }
 
-  async getByLogin(login: string): Promise<UserResponse> {
+  async getByLogin(login: string): Promise<User> {
     const user = await this.userRepository.findOne({ where: { login } });
     if (!user) {
       throw new NotFoundException();
     }
-    return user.toResponse();
+    return user;
   }
 
-  private async validatePassword(
+  async validatePassword(
     plaintextPassword: string,
     hash: string,
   ): Promise<boolean> {
@@ -87,7 +86,7 @@ export class UsersService {
     return equal;
   }
 
-  private async hashPassword(password: string): Promise<string> {
+  async hashPassword(password: string): Promise<string> {
     const hashed = await bcrypt.hash(password, +process.env.SALT || 10);
     return hashed;
   }

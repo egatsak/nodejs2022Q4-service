@@ -1,45 +1,71 @@
-import { Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
-import { AlbumEntity } from '../../albums/entities/album.entity';
-import { ArtistEntity } from '../../artists/entities/artist.entity';
-import { TrackEntity } from '../../tracks/entities/track.entity';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
+import { Album } from '../../albums/entities/album.entity';
+import { Artist } from '../../artists/entities/artist.entity';
+import { Track } from '../../tracks/entities/track.entity';
 
 @Entity()
 export class FavoriteArtist {
-  constructor(artist: ArtistEntity) {
-    this.artist = artist;
+  constructor(artistId: string | null) {
+    this.artistId = artistId;
   }
 
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @ManyToOne(() => ArtistEntity, null, { onDelete: 'CASCADE' })
-  artist: ArtistEntity;
+  @Column({ name: 'artist_id', type: 'uuid' })
+  artistId: string | null;
+
+  @OneToOne(() => Artist, (artist) => artist.id, {
+    onDelete: 'CASCADE',
+    eager: false,
+  })
+  @JoinColumn({ name: 'artist_id', referencedColumnName: 'id' })
+  artist: Artist;
 }
 
 @Entity()
 export class FavoriteAlbum {
-  constructor(album: AlbumEntity) {
-    this.album = album;
+  constructor(albumId: string | null) {
+    this.albumId = albumId;
   }
 
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @ManyToOne(() => AlbumEntity, null, { onDelete: 'CASCADE' })
-  album: AlbumEntity;
+  @Column({ name: 'album_id', type: 'uuid' })
+  albumId: string | null;
+
+  @OneToOne(() => Album, (album) => album.id, {
+    onDelete: 'CASCADE',
+    eager: false,
+  })
+  @JoinColumn({ name: 'album_id', referencedColumnName: 'id' })
+  album: Album;
 }
 
 @Entity()
 export class FavoriteTrack {
-  constructor(track: TrackEntity) {
-    this.track = track;
+  constructor(trackId: string | null) {
+    this.trackId = trackId;
   }
 
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-  @ManyToOne(() => TrackEntity, null, { onDelete: 'CASCADE' })
-  track: TrackEntity;
+  @Column({ name: 'track_id', type: 'uuid' })
+  trackId: string | null;
+
+  @OneToOne(() => Track, (track) => track.id, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'track_id', referencedColumnName: 'id' })
+  track: Track;
 }
 
 interface IFavorites {
@@ -48,19 +74,19 @@ interface IFavorites {
   tracks: string[]; // favorite tracks ids
 }
 
-export class FavoritesEntity implements IFavorites {
+export class Favorites implements IFavorites {
   artists: string[]; // favorite artists ids
   albums: string[]; // favorite albums ids
   tracks: string[]; // favorite tracks ids
 }
 interface IFavoritesResponse {
-  artists: ArtistEntity[];
-  albums: AlbumEntity[];
-  tracks: TrackEntity[];
+  artists: Artist[];
+  albums: Album[];
+  tracks: Track[];
 }
 
 export class FavoritesResponse implements IFavoritesResponse {
-  artists: ArtistEntity[];
-  albums: AlbumEntity[];
-  tracks: TrackEntity[];
+  artists: Artist[];
+  albums: Album[];
+  tracks: Track[];
 }

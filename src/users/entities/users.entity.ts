@@ -5,24 +5,25 @@ import {
   PrimaryGeneratedColumn,
   /*   Unique, */
   UpdateDateColumn,
+  VersionColumn,
 } from 'typeorm';
 import { Exclude } from 'class-transformer';
 
 export type UserResponse = Omit<
-  UserEntity,
+  User,
   'password' | 'toResponse' | 'createdAt' | 'updatedAt'
 > & { createdAt: number; updatedAt: number };
 
 @Entity()
 /* @Unique(['login']) */
-export class UserEntity {
+export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   login: string;
 
-  @Column({ default: 1 })
+  @VersionColumn()
   version: number;
 
   @CreateDateColumn()
@@ -35,7 +36,7 @@ export class UserEntity {
   @Exclude()
   password: string;
 
-  constructor(partial: Partial<UserEntity>) {
+  constructor(partial: Partial<User>) {
     Object.assign(this, partial);
   }
 

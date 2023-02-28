@@ -1,6 +1,6 @@
 import { Expose, Transform } from 'class-transformer';
-import { AlbumEntity } from 'src/albums/entities/album.entity';
-import { ArtistEntity } from 'src/artists/entities/artist.entity';
+import { Album } from '../../albums/entities/album.entity';
+import { Artist } from '../../artists/entities/artist.entity';
 import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 interface ITrack {
@@ -12,19 +12,19 @@ interface ITrack {
 }
 
 @Entity()
-export class TrackEntity implements ITrack {
+export class Track implements ITrack {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
   name: string;
 
-  @ManyToOne(() => ArtistEntity, null, { onDelete: 'SET NULL', eager: true })
+  @ManyToOne(() => Artist, null, { onDelete: 'SET NULL', eager: true })
   @Expose({ name: 'artistId' })
   @Transform(({ value }) => (value ? value.id : null))
   artistId: string | null;
 
-  @ManyToOne(() => AlbumEntity, null, { onDelete: 'SET NULL', eager: true })
+  @ManyToOne(() => Album, null, { onDelete: 'SET NULL', eager: true })
   @Expose({ name: 'albumId' })
   @Transform(({ value }) => (value ? value.id : null))
   albumId: string | null;

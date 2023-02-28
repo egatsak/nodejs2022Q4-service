@@ -1,5 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { ArtistRepository } from 'src/artists/artists.repository';
+import { ArtistRepository } from '../artists/artists.repository';
 import { AlbumRepository } from './albums.repository';
 import { CreateAlbumDto } from './dto/create-album.dto';
 import { UpdateAlbumDto } from './dto/update-album.dto';
@@ -52,22 +52,6 @@ export class AlbumsService {
   }
 
   async remove(id: string) {
-    /*  const album = await this.findOne(id);
-
-    const tracks = await this.db.getAllTracksByKey({
-      key: 'albumId',
-      equals: album.id,
-    });
-
-    await Promise.all(
-      tracks.map(
-        async (track) =>
-          await this.db.updateTrack(track.id, { ...track, albumId: null }),
-      ),
-    );
-
-    await this.db.removeAlbumFromFavs(id);
-    await this.db.deleteAlbum(id); */
     const album = await this.albumRepository.findOneBy({ id });
     if (!album) {
       throw new NotFoundException();
